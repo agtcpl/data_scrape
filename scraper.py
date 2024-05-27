@@ -2,7 +2,10 @@
 from bs4 import BeautifulSoup
 import requests
 import re
- 
+import pandas as pd
+from random import randint
+from time import sleep
+
 base_URL = 'https://metro.co.uk'
  
 # get the business category
@@ -51,6 +54,7 @@ def article_scraper(article_url):
     data = {}  
  
     try:
+        sleep(randint(1,10))
         response = requests.get(article_url)
  
         soup = BeautifulSoup(response.content, 'html.parser')
@@ -77,11 +81,13 @@ def article_scraper(article_url):
         print(f'Error fetching article data for {article_url}: {e}')
 
 
-article_urls = fetch_article_urls(category_URL, 2)
+article_urls = fetch_article_urls(category_URL, 10)
 for article in article_urls:
     article_scraper(article)
 
-print(data_list)
+df = pd.DataFrame(data_list)
+csv_file = 'output2.csv'
+df.to_csv(csv_file, index=False)
 
 
 
